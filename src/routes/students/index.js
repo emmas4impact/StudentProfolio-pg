@@ -61,7 +61,7 @@ router.put("/:id", async (req, res)=> {
 })
 
 router.delete("/:id", async (req, res) => {
-    const response = await db.query(`DELETE FROM "Books" WHERE ASIN = $1`, [ req.params.asin ])
+    const response = await db.query(`DELETE FROM "students" WHERE _id = $1`, [ req.params.id ])
 
     if (response.rowCount === 0)
         return res.status(404).send("Not Found")
