@@ -11,7 +11,7 @@ router.get("/", async(req, res)=>{
 })
 
 router.get("/:id", async (req, res)=>{
-    const response = await db.query('SELECT _id, Name, description, RepoURL, LiveURL, studentID FROM "projects" WHERE _id= $1', 
+    const response = await db.query('SELECT _id, projectname, description, repoURL, liveURL, studentID FROM "projects" WHERE _id= $1', 
                                                                                         [ req.params.id ])
 
     if (response.rowCount === 0) 
@@ -21,10 +21,10 @@ router.get("/:id", async (req, res)=>{
 })
 
 router.post("/", async (req, res)=> {
-    const response = await db.query(`INSERT INTO "projects" ( Name, description, RepoURL, LiveURL, studentID ) 
+    const response = await db.query(`INSERT INTO "projects" ( projectname, description, repourl, liveurl, studentid ) 
                                      Values ($1, $2, $3, $4, $5)
                                      RETURNING *`, 
-                                    [ req.body.Name, req.body.description, req.body.RepoURL, req.body.LiveURL, req.body.studentID ])
+                                    [ req.body.projectname, req.body.description, req.body.repourl, req.body.liveurl, req.body.studentid ])
     
     console.log(response)
     res.send(response.rows[0])
@@ -42,7 +42,7 @@ router.put("/:id", async (req, res)=> {
             params.push(req.body[bodyParamName]) //save the current body parameter into the params array
         }
 
-        params.push(req.params.asin) //push the asin into the array
+        params.push(req.params.id) //push the asin into the array
         query += " WHERE _id = $" + (params.length) + " RETURNING *" //adding filtering for ASIN + returning
         console.log(query)
 
