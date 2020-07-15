@@ -32,7 +32,7 @@ studentRouter.post("/checkEmail", async(req, res)=>{
         res.send(response.rows)
     }else{
         
-        res.send("email exit")
+        res.send("email exist")
     }
     
 })
@@ -61,7 +61,7 @@ studentRouter.put("/:id", async (req, res)=> {
             params.push(req.body[bodyParamName]) //save the current body parameter into the params array
         }
 
-        params.push(req.params.asin) //push the asin into the array
+        params.push(req.params.id) //push the asin into the array
         query += " WHERE _id = $" + (params.length) + " RETURNING *" //adding filtering for ASIN + returning
         console.log(query)
 
