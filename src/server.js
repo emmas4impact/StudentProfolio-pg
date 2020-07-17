@@ -6,7 +6,10 @@ const db = require("./db")
 const studentRouter = require("./routes/students")
 const projectRouter = require("./routes/projects")
 const listEndpoints = require("express-list-endpoints")
+// const sequelize = require("./db");
 
+// sequelize.authenticate().then(
+//     ()=>console.log("Its working")).catch((e)=>console.log(e))
 const server = express()
 server.use(cors())
 server.use(express.json())

@@ -7,7 +7,7 @@ const router = express.Router()
 router.get("/", async(req, res)=>{
     
     const response = await db.query('SELECT * FROM "projects"')
-    res.send(response.rows)
+    res.send(response)
 })
 
 router.get("/:id", async (req, res)=>{

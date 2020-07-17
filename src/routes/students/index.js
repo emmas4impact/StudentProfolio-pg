@@ -1,16 +1,35 @@
 const express = require("express")
 const db = require("../../db")
-
+const Student = require("../../models/student")
 const studentRouter = express.Router();
 
 
 studentRouter.get("/", async(req, res)=>{
+    try {
+        const response = await db.query(' SELECT _id, firstname, surname, email, dateOfBirth  FROM "students"');
+        //const students = await Student.findAll()
+        console.log(response)
+        res.send(response)
+        
+    } catch (error) {
+        console.log(error)
+        res.status(500).send(error)
+    }
     
-    const response = await db.query('SELECT * FROM "students"')
-    res.send(response.rows)
+  
+    
 })
 
 studentRouter.get("/:id", async (req, res)=>{
+    const response = await db.query('SELECT _id, firstname, surname, email, dateOfBirth FROM "students" WHERE _id= $1', 
+                                                                                        [ req.params.id ])
+
+    if (response.rowCount === 0) 
+        return res.status(404).send("Not found")
+
+    res.send(response.rows[0])
+})
+studentRouter.get("/:id/projects", async (req, res)=>{
     const response = await db.query('SELECT _id, firstname, surname, email, dateOfBirth FROM "students" WHERE _id= $1', 
                                                                                         [ req.params.id ])
 
