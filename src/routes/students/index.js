@@ -1,15 +1,15 @@
 const express = require("express")
-const db = require("../../db")
-const Student = require("../../models/student")
+const db = require("../../db/index")
+//const Student = require("../../models/student")
 const studentRouter = express.Router();
 
 
 studentRouter.get("/", async(req, res)=>{
     try {
-        const response = await db.query(' SELECT _id, firstname, surname, email, dateOfBirth  FROM "students"');
+        const response = await db.query(' SELECT _id, firstname, surname, email, dateofbirth  FROM "students"');
         //const students = await Student.findAll()
-        console.log(response)
-        res.send(response)
+        console.log(response.rows)
+        res.send({Students:response.rows, Total: response.rowCount})
         
     } catch (error) {
         console.log(error)

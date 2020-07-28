@@ -1,13 +1,42 @@
 const express = require("express")
-const db = require("../../db")
+const db = require("../../db/index")
 
 const router = express.Router()
 
-
+console.log(db)
 router.get("/", async(req, res)=>{
+    const order = req.query.order || "asc"
+    const offset = req.query.offset 
+    const limit = req.query.limit 
+
+    // removing them from Query since otherwise I'll automatically filter on them
+    delete req.query.order
+    delete req.query.offset
+    delete req.query.limit
+    let query = 'SELECT * FROM "projects"'
     
-    const response = await db.query('SELECT * FROM "projects"')
-    res.send(response)
+    const params = []
+    
+    for (queryParam in req.query) { //for each value in query string, I'll filter
+        params.push(req.query[queryParam])
+
+        if (params.length === 1) // for the first, I'll add the where clause
+            query += `WHERE ${queryParam} = $${params.length} `
+        else // the all the rest, it'll start with AND
+            query += ` AND ${queryParam} = $${params.length} `
+    }
+
+    query += " ORDER BY projectname " + order  //adding the sorting 
+
+    params.push (limit)
+    query += ` LIMIT $${params.length} `
+    params.push(offset)
+    query += ` OFFSET $${params.length}`
+    
+    console.log(query)
+    
+    const response = await db.query(query, params)
+    res.send({projects: response.rows, total: response.rowCount})
 })
 
 router.get("/:id", async (req, res)=>{
